@@ -1,15 +1,14 @@
 import React from "react";
 import { ListItem, User } from './index';
-import { Table } from 'antd';
+import { Table, TableProps } from 'antd';
 //引入culumns泛型
 import { ColumnsType } from 'antd/es/table';
 import dayjs from "dayjs";
-export interface ListProps {
-    list: ListItem[];
+export interface ListProps extends TableProps<ListItem> {
     users: User[];
 }
 const List:React.FC<ListProps> = (props) => {
-    const { list, users } = props;
+    const { users, pagination, ...restProps } = props;
     const columns:ColumnsType<ListItem> = [
         { title: '名称', 
           dataIndex: 'name',
@@ -44,7 +43,12 @@ const List:React.FC<ListProps> = (props) => {
         },
     ]
     return (
-        <Table rowKey="id" columns={columns} dataSource={list} pagination={false}>
+        <Table
+          rowKey="id"
+          columns={columns}
+          pagination={false}
+          { ...restProps}
+          >
         </Table>
     )
 }

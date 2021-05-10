@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SearchPannel  from './searchPanel';
 import List  from './list';
+import { message } from 'antd';
 import { clearObject, useHttp } from 'common/utils';
 import { useDebounce } from 'hooks/useDebounce';
 import { useMount } from 'hooks/useMount';
@@ -31,12 +32,21 @@ const Project:React.FC = () => {
     const [ user, setUser ] = useState<User[]>([]);
     // 请求出的列表数据
     const [ list, setList ] = useState<ListItem[]>([]);
+    // 用于loading和error
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     // 防抖含函数
     const newValue = useDebounce(params, 800);
     const requestHttp = useHttp();
     // 获取表格数据数据
     useEffect(() => {
-        requestHttp('projects', { data: clearObject(newValue) }).then(res=> { setList(res) });
+        setIsLoading(true);
+        requestHttp('projects', { data: clearObject(newValue) })
+           .then(res=> { setList(res) })
+           .catch(error => {
+               setList([]);
+               message.error(error.message);
+           })
+           .finally(() => { setIsLoading(false) });
         // 取消useEffect依赖项检查
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [newValue]) //params改变才请求
@@ -47,7 +57,7 @@ const Project:React.FC = () => {
     return (
         <Container>
            <SearchPannel params={params} setParams={setParams} user={user}></SearchPannel>
-           <List list={list} users={user}></List>
+           <List loading={isLoading} dataSource={ list } users={user}></List>
         </Container>
     )
 };
