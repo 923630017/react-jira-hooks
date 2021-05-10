@@ -28,10 +28,8 @@ const List:React.FC<ListProps> = (props) => {
         },
     ]
     return (
-        <div>
-          <Table rowKey="id" columns={columns} dataSource={list} pagination={false}>
+        <Table rowKey="id" columns={columns} dataSource={list} pagination={false}>
         </Table>
-        </div>
     )
 }
 export default List;
