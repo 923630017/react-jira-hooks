@@ -43,7 +43,7 @@ const Project:React.FC = () => {
       requestHttp('users').then(res => { setUser(res) })
     });
     return (
-        <div className='project-list'>
+        <div>
            <SearchPannel params={params} setParams={setParams} user={user}></SearchPannel>
            <List list={list} users={user}></List>
         </div>
