@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAuth } from 'context/auth-context';
 import { Button, Form, Input } from 'antd';
+// 登录注册样式引入
+import { LongButton  } from './index';
 export interface LoginParams {
     username: string;
     password: string;
@@ -23,7 +25,7 @@ export const Login:React.FC = (props) => {
                     <Input type="password" placeholder="输入密码"/>
                 </Form.Item>
                 <Form.Item className="submit-btn">
-                    <Button htmlType="submit" type="primary">登录</Button>
+                    <LongButton htmlType="submit" type="primary">登录</LongButton>
                 </Form.Item>    
             </Form>    
         </div>
