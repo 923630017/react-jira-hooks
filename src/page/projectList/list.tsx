@@ -24,7 +24,7 @@ const List:React.FC<ListProps> = (props) => {
                 { users.find(userItem => userItem.id === row.personId)?.name || '未知' }
             </span>
           },
-          align: "center"
+          align: 'center'
         },
     ]
     return (
