@@ -18,7 +18,7 @@ const UnauthenticatedApp:React.FC = () => {
                     isRegister ? <Register/> : <Login/>
                 }
                 <Divider></Divider>
-                <a href={'www'}  onClick={() => setIsRegister(!isRegister) }>切换到{isRegister ? '已有账号？请登录' : '没有账号？请先注册'}</a>
+                <Button type='link'  onClick={() => setIsRegister(!isRegister) }>切换到{isRegister ? '已有账号？请登录' : '没有账号？请先注册'}</Button>
             </LoginCard>
         </Container>
     )

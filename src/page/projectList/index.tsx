@@ -4,7 +4,7 @@ import List  from './list';
 import { clearObject, useHttp } from 'common/utils';
 import { useDebounce } from 'hooks/useDebounce';
 import { useMount } from 'hooks/useMount';
-
+import styled from '@emotion/styled';
 export interface User {
     id: number;
     name: string;
@@ -19,7 +19,7 @@ export interface ListItem {
     name: string,
     personId: number,
     organization: string,
-    created: Date
+    created: number
 }
 const Project:React.FC = () => {
     // 兄弟传值，可以通过变量提升，也就是将变量提生到父组件
@@ -36,17 +36,22 @@ const Project:React.FC = () => {
     const requestHttp = useHttp();
     // 获取表格数据数据
     useEffect(() => {
-        requestHttp('projects', { data: clearObject(newValue) }).then(res=> { setList(res) })
+        requestHttp('projects', { data: clearObject(newValue) }).then(res=> { setList(res) });
+        // 取消useEffect依赖项检查
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [newValue]) //params改变才请求
     // 获取用户数据
     useMount(() => {
       requestHttp('users').then(res => { setUser(res) })
     });
     return (
-        <div>
+        <Container>
            <SearchPannel params={params} setParams={setParams} user={user}></SearchPannel>
            <List list={list} users={user}></List>
-        </div>
+        </Container>
     )
 };
 export default Project;
+const Container = styled.div`
+    padding: 3.2rem;
+`

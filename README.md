@@ -106,3 +106,10 @@ const Container = styled.div`
   ;
   height: 100vh;
 `
+// 
+export function useMount(fn: () => void) {
+    useEffect(() => {
+        fn()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); //在这里会警告， 让你将fn填入到检测数据中，但这样会造成无限循环； 这与useMemo和useCallBack有关;
+} 
