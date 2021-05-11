@@ -17,15 +17,13 @@ export const login = (data: { username: string, password: string }) => {
             "Content-type": "application/json",
         },
         body: JSON.stringify(data),
-    }).then(response => {
+    }).then(async response => {
         if(response.ok) {
-           return response.json()
+           return handleToken(await response.json())
+        } else {
+           return Promise.reject(await response.json())
         }
-    }).then((res) => {
-        return handleToken(res);
-    }).catch(() => 
-        Promise.reject(data)
-    );
+    });
 }
 // 注册
 export const register = (data: { username: string, password: string }) => {
@@ -35,15 +33,13 @@ export const register = (data: { username: string, password: string }) => {
             "Content-type": "application/json",
         },
         body: JSON.stringify(data),
-    }).then(response => {
+    }).then(async response => {
         if(response.ok) {
-           return response.json()
-        }
-    }).then((res) => {
-        return handleToken(res);
-    }).catch(() => 
-        Promise.reject(data)
-    );
+            return handleToken(await response.json())
+         } else {
+            return Promise.reject(await response.json())
+         }
+    });
 }
 // 推出登录
 export const logout = async () => localStorage.removeItem(localStorageKey)  

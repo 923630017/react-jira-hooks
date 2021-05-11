@@ -11,7 +11,18 @@ const defaultInitState:State<null> = {
    data: null,
    error: null
 };
-export const useAsync = <D extends {}>(initialState?: State<D>) => {
+interface Configs {
+   throwError?: boolean
+}
+//  设置配置
+const defaultConfig:Configs = {
+   throwError: false
+}
+export const useAsync = <D extends any>(initialState?: State<D>, initConfig?:Configs) => {
+   const config = {
+      ...defaultConfig,
+      ...initConfig,
+   }
    const [state, setState] = useState({
       ...defaultInitState,
       ...initialState, //用户传的值
@@ -45,6 +56,10 @@ export const useAsync = <D extends {}>(initialState?: State<D>) => {
          return res;
       }).catch((error) => {
          setError(error);
+         if(config.throwError) {
+            return Promise.reject(error)
+         }
+         return error
       })
    }
    return {

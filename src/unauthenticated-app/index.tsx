@@ -1,21 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Register from './register';
 import Login from './login';
-import { Card, Divider, Button } from 'antd';
+import { Card, Divider, Button, message } from 'antd';
 import styled from '@emotion/styled';
 import logo from 'common/img/logo.svg';
 import leftPic from 'common/img/left.svg';
 import rightPic from 'common/img/right.svg';
 const UnauthenticatedApp:React.FC = () => {
     const [ isRegister, setIsRegister] = React.useState(false);
+    // 定义error情形
+    const [error, setError] = useState<Error | null>(null);
+    React.useEffect(() => {
+      if(error?.message) {
+        message.error(error?.message)
+      };
+    }, [error]);
     return(
         <Container>
             <Header></Header>
             <BackGround></BackGround>
             <LoginCard bordered={false}>
-                <Title>{isRegister ? '登录' : '注册'}</Title>
+                <Title>{!isRegister ? '登录' : '注册'}</Title>
                 {
-                    isRegister ? <Register/> : <Login/>
+                    isRegister ? <Register onError={setError}/> : <Login onError={setError}/>
                 }
                 <Divider></Divider>
                 <Button type='link'  onClick={() => setIsRegister(!isRegister) }>切换到{isRegister ? '已有账号？请登录' : '没有账号？请先注册'}</Button>
