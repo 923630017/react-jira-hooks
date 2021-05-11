@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Register from './register';
 import Login from './login';
 import { Card, Divider, Button, message } from 'antd';
@@ -6,8 +6,16 @@ import styled from '@emotion/styled';
 import logo from 'common/img/logo.svg';
 import leftPic from 'common/img/left.svg';
 import rightPic from 'common/img/right.svg';
+import { useAuth } from 'context/auth-context';
 const UnauthenticatedApp:React.FC = () => {
     const [ isRegister, setIsRegister] = React.useState(false);
+    //获取token时报错，退出到登录页面报错提示
+    const { error:logoutError } = useAuth();
+    useEffect(() => {
+      if(logoutError && !isRegister) {
+        message.error(logoutError.message)
+      }
+    }, [])
     // 定义error情形
     const [error, setError] = useState<Error | null>(null);
     React.useEffect(() => {

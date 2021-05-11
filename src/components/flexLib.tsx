@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { Spin } from 'antd';
+import React from 'react';
 // 样式组件
 export const Row = styled.div<{
     gap?: number | boolean;
@@ -15,3 +17,19 @@ export const Row = styled.div<{
       margin-right: ${props => typeof props.gap === 'number' ? props.gap + 'rem' : props.gap ? '2rem' : undefined}
     }
 `
+// 全屏页面
+const FullPage = styled.div`
+ height:100vh;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+`
+//全屏加载页面
+const FullPageLoading:React.FC = () => {
+  return(
+    <FullPage>
+       <Spin size={'large'}></Spin>
+    </FullPage>
+  )
+}
+export default FullPageLoading;
