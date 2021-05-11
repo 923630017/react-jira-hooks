@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { Spin } from 'antd';
+import { Spin, Typography } from 'antd';
+import { DevTools } from 'jira-dev-tool';
 import React from 'react';
 // 样式组件
 export const Row = styled.div<{
@@ -23,7 +24,25 @@ const FullPage = styled.div`
  display: flex;
  justify-content: center;
  align-items: center;
-`
+`;
+interface ErrorPageProps {
+  error: Error | null
+}
+const ErrorBox = ({ error }: { error: any }) => {
+  if (error) {
+    return <Typography.Text type={"danger"}>{error?.message}</Typography.Text>;
+  }
+  return null;
+};
+export const ErrorPage = ({error}: {error: Error | null}) => {
+  return(
+    <FullPage>
+      <DevTools/>
+      { <ErrorBox error={error}></ErrorBox>}
+    </FullPage>
+  )
+}
+
 //全屏加载页面
 const FullPageLoading:React.FC = () => {
   return(

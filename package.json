@@ -16,6 +16,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "antd": "^4.15.4",
+    "caniuse-lite": "^1.0.30001228",
     "craco-less": "^1.17.1",
     "dayjs": "^1.10.4",
     "jira-dev-tool": "^1.6.59",

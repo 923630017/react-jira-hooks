@@ -8,8 +8,10 @@ interface SearchPannelProps {
 }
 const SearchPannel:React.FC<SearchPannelProps> = (props) => {
     const { params, setParams, user } = props;
+    const info:any = undefined;
      return (
         <Form style={{marginBottom: '2rem'}} layout="inline">
+            { info.name}
             <Form.Item>
                 <Input type="text" value={params.name} onChange={e => setParams({
                     ...params,
