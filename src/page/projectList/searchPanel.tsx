@@ -22,7 +22,7 @@ const SearchPannel:React.FC<SearchPannelProps> = (props) => {
                     personId: value
                 })}>
                     <Select.Option value="">负责人</Select.Option>
-                    { user && user.map(item => <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>) }
+                    { user && user.map(item => <Select.Option key={item.id} value={String(item.id)}>{item.name}</Select.Option>) }
                 </Select>
             </Form.Item>
         </Form>
