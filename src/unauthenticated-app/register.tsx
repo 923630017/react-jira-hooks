@@ -4,6 +4,7 @@ import { Form, Input } from 'antd';
 // 登录注册样式引入
 import { LongButton  } from './index';
 import { useAsync } from 'hooks/useAsync';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 export interface RegisterParams {
     username: string;
     password: string;
@@ -24,6 +25,7 @@ export const Register:React.FC<RegisterProps> = ({onError}) => {
             onError(err);
         });
     };
+    useDocumentTitle('注册');
     return (
         <div className='register'>
             <Form onFinish={(values) => {

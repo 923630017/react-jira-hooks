@@ -15,6 +15,7 @@ const UnauthenticatedApp:React.FC = () => {
       if(logoutError && !isRegister) {
         message.error(logoutError.message)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     // 定义error情形
     const [error, setError] = useState<Error | null>(null);

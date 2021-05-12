@@ -4,6 +4,7 @@ import { Form, Input } from 'antd';
 // 登录注册样式引入
 import { LongButton  } from './index';
 import { useAsync } from 'hooks/useAsync';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 export interface LoginParams {
     username: string;
     password: string;
@@ -19,6 +20,7 @@ export const Login:React.FC<LoginProps> = ({ onError }) => {
             onError(err);
         });
     };
+    // useDocumentTitle('登录');
     return (
         <div className='login'>
             <Form onFinish={(values) => {

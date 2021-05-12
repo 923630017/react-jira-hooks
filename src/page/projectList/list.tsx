@@ -4,6 +4,7 @@ import { Table, TableProps } from 'antd';
 //引入culumns泛型
 import { ColumnsType } from 'antd/es/table';
 import dayjs from "dayjs";
+import { Link } from 'react-router-dom';
 export interface ListProps extends TableProps<ListItem> {
     users: User[];
 }
@@ -14,7 +15,10 @@ const List:React.FC<ListProps> = (props) => {
           dataIndex: 'name',
           key: 'name',
           sorter:(a, b) => a.name.localeCompare(b.name),
-          align: "center"
+          align: "center",
+          render: (value, row) => {
+            return <Link to={String(row.id)}>{row.name}</Link>
+          }
         },
         { title: '部门', 
           dataIndex: 'organization',

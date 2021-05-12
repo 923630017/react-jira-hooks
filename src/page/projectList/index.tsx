@@ -5,6 +5,7 @@ import { useDebounce } from 'hooks/useDebounce';
 import styled from '@emotion/styled';
 import { useList } from 'hooks/useList';
 import { useUser } from 'hooks/useUser';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 export interface User {
     id: number;
     name: string;
@@ -33,6 +34,7 @@ const Project:React.FC = () => {
     const {isLoading, data} =  useList(newValue);
     // 获取用户数据
     const { data: user } = useUser();
+    useDocumentTitle('项目列表', false);
     return (
         <Container>
            <SearchPannel params={params} setParams={setParams} user={user || []}></SearchPannel>
