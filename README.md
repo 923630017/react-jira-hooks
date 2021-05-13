@@ -119,3 +119,5 @@ export function useMount(fn: () => void) {
     <Link to='data1' />： 会跳转到： baseurl + data/data1
 
 // useMemo/useEffect等有依赖项的hook，其依赖项为object类型且不是hook内部方法定义的依赖项数据时，可能导致useMemo/useEffect等有依赖项的hook无线循环；
+
+type props = React.ComponentProps<typeof AA组件名称> //获取组件AA的属性

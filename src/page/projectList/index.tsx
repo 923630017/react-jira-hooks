@@ -6,26 +6,23 @@ import styled from '@emotion/styled';
 import { useList } from 'hooks/useList';
 import { useUser } from 'hooks/useUser';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
-import { useUrlQueryParam } from "hooks/useUrlQueryParam";
+import { useSerachParams } from './until';
 export interface User {
     id: number;
     name: string;
     token: string
 }
-export interface ParamsUser {
-    name: string,
-    personId: string;
-}
+export type ParamsUser = Partial<Pick<ListItem, 'name' | 'personId'>>
 export interface ListItem {
-    id: number,
-    name: string,
-    personId: number,
-    organization: string,
-    created: number
+    id: number;
+    name: string;
+    personId: number;
+    organization: string;
+    created: number;
+    pin: boolean;
 }
 const Project:React.FC = () => {
-    // 搜索参数
-    const [params, setParams] = useUrlQueryParam(['name', 'personId'])
+    const [params, setParams] = useSerachParams();
     // 防抖含函数
     const newValue = useDebounce(params, 800);
     // 列表hooks

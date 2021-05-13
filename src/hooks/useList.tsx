@@ -18,3 +18,18 @@ export const useList = (params?: Partial<ParamsUser>) => {
     }, [params]);
     return result
 }
+//编辑列表
+export const useEditList = () => {
+    const requestHttp = useHttp();
+    const {run, ...restProps} = useAsync();
+    const edit = (params: Partial<ListItem>) => {
+        return run(requestHttp(`projects/${params.id}`,{
+            data: params,
+            method: 'PATCH',
+        }))
+    }
+    return {
+        edit,
+        ...restProps
+    }
+}; 
