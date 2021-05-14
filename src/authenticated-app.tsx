@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProjectList from 'page/projectList/index';
 import ProjectScreen from 'page/projectScreen/index'; //项目看板
 import { useAuth } from './context/auth-context';
@@ -11,49 +11,60 @@ import { DownOutlined } from '@ant-design/icons';
 //引入路由
 import { Route, Routes, Navigate } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
+import ProjectModal from 'page/projectList/project-modal';
+import ProjectPopover from 'components/project-popover';
 const AuthenticatedApp:React.FC = () => {
+    const [state, setstate] = useState(false);
+    const onClose = () => { setstate(preState => !preState) }
     return(
         <Container>
-            <ContentHeader></ContentHeader>
+            <ContentHeader onClose={onClose}></ContentHeader>
+            {/* <Button onClick={onClose}>打开</Button> */}
             <Main>
                 <Router>
                     <Routes>
                         {/* 路由中*指匹配匹配下面所有的路径 */}
-                        <Route path={'/project-list'} element={<ProjectList></ProjectList>}></Route>
+                        <Route path={'/project-list'} element={<ProjectList onClose={onClose}></ProjectList>}></Route>
                         <Route path={'/project-list/:id/*'}  element={<ProjectScreen/>}></Route>
                         <Navigate to={'/project-list'}></Navigate>
                     </Routes>
                 </Router>
             </Main>
+            <ProjectModal visible={state} onClose={onClose}></ProjectModal>
         </Container>
     )
 }
-const ContentHeader = () => {
-    const { logout, user } = useAuth();
+const ContentHeader = (props: { onClose: () => void }) => {
     return (
     <Header between={true}>
         <HeaderLeft gap={true}>
             {/* svg */}
-            <Button type='link' onClick={() => { window.location.href = window.location.origin }}>
-                <SoftwareSvg width={'200px'} height={'30px'} color={'deeppink'}></SoftwareSvg>
+            <Button type='link' style={{padding: 0, display: 'flex', alignItems: 'center'}} onClick={() => { window.location.href = window.location.origin }}>
+                <SoftwareSvg width={'200px'}  color={'deeppink'}></SoftwareSvg>
             </Button>
-            <h3>项目</h3>
-            <h3>用户</h3>
+            <ProjectPopover onClose={props.onClose}/>
+            <span>用户</span>
         </HeaderLeft>
         <HeaderRight>
-            <Dropdown overlay={
-                <Menu>
-                <Menu.Item key="logout">
-                    <Button type={'link'} onClick={logout}>退出</Button>
-                </Menu.Item>
-                </Menu>
-            }>
-                <NameButton type={'link'}  onClick={e => e.preventDefault()}>
-                Hi, {user?.name} <DownOutlined />
-                </NameButton>
-            </Dropdown>
+            <User/>
         </HeaderRight>
     </Header>)
+}
+const User = () => {
+    const { logout, user } = useAuth();
+    return(
+        <Dropdown overlay={
+            <Menu>
+            <Menu.Item key="logout">
+                <Button type={'link'} onClick={logout}>退出</Button>
+            </Menu.Item>
+            </Menu>
+        }>
+            <NameButton type={'link'}  onClick={e => e.preventDefault()}>
+            Hi, {user?.name} <DownOutlined />
+            </NameButton>
+        </Dropdown>
+    )
 }
 export default AuthenticatedApp;
 // grid-area 给子元素起名

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Spin, Typography } from 'antd';
+import { Button, Spin, Typography } from 'antd';
 import { DevTools } from 'jira-dev-tool';
 import React from 'react';
 // 样式组件
@@ -26,7 +26,7 @@ const FullPage = styled.div`
  align-items: center;
 `;
 interface ErrorPageProps {
-  error: Error | null
+  error: Error | null;
 }
 const ErrorBox = ({ error }: { error: any }) => {
   if (error) {
@@ -51,4 +51,7 @@ const FullPageLoading:React.FC = () => {
     </FullPage>
   )
 }
+export const NoPaddingButton = styled(Button)`
+  padding: 0;
+`
 export default FullPageLoading;

@@ -7,6 +7,7 @@ import { useList } from 'hooks/useList';
 import { useUser } from 'hooks/useUser';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import { useSerachParams } from './until';
+import { Row, Button } from "antd";
 export interface User {
     id: number;
     name: string;
@@ -21,7 +22,10 @@ export interface ListItem {
     created: number;
     pin: boolean;
 }
-const Project:React.FC = () => {
+interface ProjectProps {
+    onClose: () => void;
+}
+const Project:React.FC<ProjectProps> = (props) => {
     const [params, setParams] = useSerachParams();
     // 防抖含函数
     const newValue = useDebounce(params, 800);
@@ -33,8 +37,17 @@ const Project:React.FC = () => {
     useDocumentTitle('项目列表', false);
     return (
         <Container>
+           <Row justify='space-between' align="middle">
+              <h1>项目列表</h1>
+              <Button onClick={() => { props.onClose() }}>创建项目</Button>
+           </Row>
            <SearchPannel params={params}  setParams={setParams} user={user || []}></SearchPannel>
-           <List loading={isLoading} retry={retry} dataSource={ data || [] } users={user || []}></List>
+           <List
+                loading={isLoading}
+                onClose={props.onClose}
+                retry={retry}
+                dataSource={ data || [] } users={user || []}
+            ></List>
         </Container>
     )
 };

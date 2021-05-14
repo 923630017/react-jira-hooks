@@ -1,6 +1,6 @@
 import React from "react";
 import { ListItem, User } from './index';
-import { Table, TableProps } from 'antd';
+import { Button, Space, Table, TableProps } from 'antd';
 //引入culumns泛型
 import { ColumnsType } from 'antd/es/table';
 import dayjs from "dayjs";
@@ -10,9 +10,10 @@ import { useEditList } from "hooks/useList";
 export interface ListProps extends TableProps<ListItem> {
     users: User[];
     retry: () => void;
+    onClose: () => void;
 }
 const List:React.FC<ListProps> = (props) => {
-    const { users, pagination, retry, ...restProps } = props;
+    const { users, pagination, retry, onClose,...restProps } = props;
     const { edit, ...resultProps } = useEditList();
     //编辑收藏
     const pinProject = (id: number, pin: boolean) => { edit({id, pin}).then(() => { retry() }) }
@@ -59,6 +60,17 @@ const List:React.FC<ListProps> = (props) => {
             </span>
           },
           align: 'center'
+        },
+        {
+          title: '操作',
+          key: 'action',
+          align: 'center',
+          render: (value, row) => (
+            <Space size="middle">
+              <Button type={'primary'} onClick={() => {onClose()}}>编辑</Button>
+              <Button danger>删除</Button>
+            </Space>
+          ),
         },
     ]
     return (
