@@ -8,9 +8,10 @@ import { useAsync } from 'hooks/useAsync';
 export const useList = (params?: Partial<ParamsUser>) => {
     const { run, ...result } = useAsync<ListItem[]>();
     const requestHttp = useHttp();
+    const fetchParams = () => requestHttp('projects', { data: clearObject(params || {})})
     // 获取表格数据数据
     useEffect(() => {
-        run(requestHttp('projects', { data: clearObject(params || {})}))
+        run(fetchParams(), { retry: fetchParams })
         if(result.isError) {
            message.error(result.error?.message);
         }

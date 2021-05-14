@@ -121,3 +121,47 @@ export function useMount(fn: () => void) {
 // useMemo/useEffect等有依赖项的hook，其依赖项为object类型且不是hook内部方法定义的依赖项数据时，可能导致useMemo/useEffect等有依赖项的hook无线循环；
 
 type props = React.ComponentProps<typeof AA组件名称> //获取组件AA的属性
+
+
+*** useState定义函数，函数会在页面初始化时不停的执行
+  const [lazy, setLazy] = useState(() => { xxxx });
+  默认认为传入函数为惰性初始 state；必须要有返回值， 不然无线执行，消耗性能
+  // 定义函数为变量时，方法如下：
+  *1： export default function App() {
+        // 定义函数为state时 必须保证返回值为该函数 惰性初始 state规则;
+        // 不然以useState(() =>{ alert('old function') })这种方式。会一直会循环执行
+        const [lazy, setLazy] = useState(() => () =>{ alert('old function') })
+        console.log(lazy); // () => { alert('old function') }
+        return (
+            <div className="App">
+            <button 
+                onClick={() => { setLazy(() => () => { alert('new function') }) }}
+            >修改函数</button>
+            <button
+                onClick={() => { lazy() }}>执行函数</button>
+            <h1>Hello CodeSandbox</h1>
+            <h2>Start editing to see some magic happen!</h2>
+            </div>
+        );
+    }
+    *2 export default function App() {
+            //利用ref定义函数值时； 其ref的状态改变不会导致页面重新刷新
+            const callbackRef = useRef(() => { alert('old function')})
+            console.log(callbackRef.current); // () => { alert('old function') }
+            const callback = callbackRef.current;
+            return (
+                <div className="App">
+                <button 
+                    // 修改ref current
+                    onClick={() => { callbackRef.current= () => { alert('new function1') } }}
+                >修改函数</button>
+                <button
+                    // callbackRef.current()会更新； 但是callback在页面第一次加载后就不会刷新， 因此上面会跟新
+                    // 下班执行函数不会改变
+                    // onClick={() => { callbackRef.current() }}>执行函数</button>
+                    onClick={() => { callback() }}>执行函数</button>
+                <h1>Hello CodeSandbox</h1>
+                <h2>Start editing to see some magic happen!</h2>
+                </div>
+            );
+        }

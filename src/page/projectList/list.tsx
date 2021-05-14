@@ -9,12 +9,13 @@ import Pin from "components/pin";
 import { useEditList } from "hooks/useList";
 export interface ListProps extends TableProps<ListItem> {
     users: User[];
+    retry: () => void;
 }
 const List:React.FC<ListProps> = (props) => {
-    const { users, pagination, ...restProps } = props;
+    const { users, pagination, retry, ...restProps } = props;
     const { edit, ...resultProps } = useEditList();
     //编辑收藏
-    const pinProject = (id: number, pin: boolean) => { edit({id, pin}) }
+    const pinProject = (id: number, pin: boolean) => { edit({id, pin}).then(() => { retry() }) }
     const columns:ColumnsType<ListItem> = [
         {
           title: <Pin checked={true} disabled></Pin>,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SearchPannel  from './searchPanel';
 import List  from './list';
 import { useDebounce } from 'hooks/useDebounce';
@@ -26,15 +26,15 @@ const Project:React.FC = () => {
     // 防抖含函数
     const newValue = useDebounce(params, 800);
     // 列表hooks
-    const {isLoading, data} =  useList(newValue);
+    const {isLoading, data, retry} =  useList(newValue);
     // 获取用户数据
     const { data: user } = useUser();
     // 设置页面标题
     useDocumentTitle('项目列表', false);
     return (
         <Container>
-           <SearchPannel params={params} setParams={setParams} user={user || []}></SearchPannel>
-           <List loading={isLoading} dataSource={ data || [] } users={user || []}></List>
+           <SearchPannel params={params}  setParams={setParams} user={user || []}></SearchPannel>
+           <List loading={isLoading} retry={retry} dataSource={ data || [] } users={user || []}></List>
         </Container>
     )
 };

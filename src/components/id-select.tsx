@@ -19,7 +19,6 @@ export interface IdSelectProps extends Omit<NewSelectProps, 'options' | 'onChang
 const toNumber = (value:any) => isNaN(Number(value)) ? 0 : Number(value);  
 const IdSelect:React.FC<IdSelectProps> = (props) => {
     const { value, defaultName, onChange, options, ...restProps } = props;
-    console.log(value, options);
     return (
         <Select
             value={ options?.length ? toNumber(value) : 0}
