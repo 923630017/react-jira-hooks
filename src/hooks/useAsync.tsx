@@ -1,5 +1,5 @@
 // 对请求的加载、报错等进行封装统一
-import  { useState } from 'react';
+import  { useCallback, useState } from 'react';
 import useUnmount from './useUnmount';
 interface State<T> {
    loading: 'start' | 'loading' | 'success' | 'error';
@@ -32,51 +32,56 @@ export const useAsync = <D extends any>(initialState?: State<D>, initConfig?:Con
    // useState直接传入函数的含义是：惰性初始化；所以，要用useState保存函数，不能直接传入函数
    const [retry, setRetry] = useState(() => () => {});
    // 设置值 成功时
-   const setData = (data: D) => { 
+   const setData = useCallback((data: D) => { 
       setState({
          loading: 'success',
          data,
          error: null,
       });   
-   }
-   const setError =(error:Error) => {
-      setState({
-         data: null,
-         loading: 'error',
-         error,
-      })
-   };
+   }, [])
+   const setError =useCallback(
+      (error:Error) => {
+         setState({
+            data: null,
+            loading: 'error',
+            error,
+         })
+      },
+      [],
+   )
    // 组件是否卸载；卸载就不再赋值
    const useUnmountRef = useUnmount();
-   //用于触发异步请求
-   const run = (promise:Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
-      // b必须传入promise
-      if(!promise || !promise.then) {
-         throw new Error('请传入Promise 类型参数');
-      }
-      setRetry(() => () => {
-         if (runConfig?.retry) {
-           run(runConfig?.retry(), runConfig);
+   //用于触发异步请求 run是返回的函数，必须要用usecallback
+   const run = useCallback((promise:Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+         // b必须传入promise
+         if(!promise || !promise.then) {
+            throw new Error('请传入Promise 类型参数');
          }
-      });
-      // 请求加载时
-      setState({...state, loading: 'loading'});
-      // 请求返回
-      return promise.then((res) => {
-         if(!useUnmountRef.current) {
-            setData(res);
-         }
-         return res;
-      }).catch((error) => {
-         if(!useUnmountRef.current) {
-            setError(error);
-         }
-         if(config.throwError) {
-            return Promise.reject(error)
-         }
-         return error
-      })
-   }
+         setRetry(() => () => {
+            if (runConfig?.retry) {
+              run(runConfig?.retry(), runConfig);
+            }
+         });
+         // 请求加载时
+         setState((preState)  => ({...preState, loading: 'loading'}));
+         // 请求返回
+         return promise.then((res) => {
+            if(!useUnmountRef.current) {
+               setData(res);
+            }
+            return res;
+         }).catch((error) => {
+            if(!useUnmountRef.current) {
+               setError(error);
+            }
+            if(config.throwError) {
+               return Promise.reject(error)
+            }
+            return error
+         })
+      },
+      [config.throwError, setData, useUnmountRef, setError],
+   )
    return {
       isStart: state.loading === 'start',
       isLoading: state.loading === 'loading',

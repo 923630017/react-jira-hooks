@@ -106,13 +106,16 @@ const Container = styled.div`
   ;
   height: 100vh;
 `
-// 
+// 不能将非基本类型的值和非状态定义的值放在依赖项，否在会循环执行
 export function useMount(fn: () => void) {
     useEffect(() => {
         fn()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); //在这里会警告， 让你将fn填入到检测数据中，但这样会造成无限循环； 这与useMemo和useCallBack有关;
+    }, []); //在这里会警告， 让你将fn填入到检测数据中，但这样会造成无限循环； 这与useMemo和useCallBack有关; 
 }
+****
+// useMemo和useCallback应用场景： 在自定义hook中有函数返回或者不是useState定义的非基本类型变量，儿返回的函数或者变量需要作为useeffect的依赖项时，那么这个返回值必须必须要用useMemo或者useCallback包裹定义；
+// useCallback 中函数有setState和state同时做依赖项时，如果函数中setState赋值时，必须使用函数类型赋值，不然会造成无线循环；
 // react-router-dom
     当前路由为/data
     <Link to='/data1' />：会跳转到： baseurl + /data1

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useAuth } from 'context/auth-context';
 import qs from 'qs';
 import * as auth from 'auth-provider';
@@ -54,5 +55,5 @@ export const $http = async (url: string, { data, token, headers, ...configs }: R
 };
 export const useHttp = () => {
   const { user } = useAuth();
-  return (url:string, config:RequestConfigs ={}) => $http(url, { ...config, token: user?.token } )
+  return useCallback((url:string, config:RequestConfigs ={}) => $http(url, { ...config, token: user?.token }), [user?.token])
 }

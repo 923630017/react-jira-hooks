@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { message } from 'antd';
 import { ParamsUser, ListItem } from "page/projectList";
 import { clearObject, useHttp } from 'common/utils';
@@ -8,15 +8,14 @@ import { useAsync } from 'hooks/useAsync';
 export const useList = (params?: Partial<ParamsUser>) => {
     const { run, ...result } = useAsync<ListItem[]>();
     const requestHttp = useHttp();
-    const fetchParams = () => requestHttp('projects', { data: clearObject(params || {})})
+    const fetchParams = useCallback(() => requestHttp('projects', { data: clearObject(params || {})}), [params, requestHttp])
     // 获取表格数据数据
     useEffect(() => {
         run(fetchParams(), { retry: fetchParams })
         if(result.isError) {
            message.error(result.error?.message);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params]);
+    }, [params, fetchParams, result.isError, result.error?.message, run]);
     return result
 }
 //编辑列表

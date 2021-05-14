@@ -13,7 +13,6 @@ export const useUrlQueryParam = <T extends string>(keys: T[]) => {
             ...pre,
             [key]: searchParams.get(key) || '',
         }}, {} as {[key in T]: string }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [searchParams]),
         // 设置数据
        (params: Partial<{[key in T]: any}>) => {
