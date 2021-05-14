@@ -10,10 +10,10 @@ import { useEditList } from "hooks/useList";
 export interface ListProps extends TableProps<ListItem> {
     users: User[];
     retry: () => void;
-    onClose: () => void;
+    compositionButton: JSX.Element;
 }
 const List:React.FC<ListProps> = (props) => {
-    const { users, pagination, retry, onClose,...restProps } = props;
+    const { users, pagination, retry, compositionButton,...restProps } = props;
     const { edit, ...resultProps } = useEditList();
     //编辑收藏
     const pinProject = (id: number, pin: boolean) => { edit({id, pin}).then(() => { retry() }) }
@@ -67,8 +67,8 @@ const List:React.FC<ListProps> = (props) => {
           align: 'center',
           render: (value, row) => (
             <Space size="middle">
-              <Button type={'primary'} onClick={() => {onClose()}}>编辑</Button>
-              <Button danger>删除</Button>
+              {compositionButton}
+              <Button danger type='link'>删除</Button>
             </Space>
           ),
         },

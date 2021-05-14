@@ -23,7 +23,7 @@ export interface ListItem {
     pin: boolean;
 }
 interface ProjectProps {
-    onClose: () => void;
+    compositionButton: JSX.Element;
 }
 const Project:React.FC<ProjectProps> = (props) => {
     const [params, setParams] = useSerachParams();
@@ -39,12 +39,12 @@ const Project:React.FC<ProjectProps> = (props) => {
         <Container>
            <Row justify='space-between' align="middle">
               <h1>项目列表</h1>
-              <Button onClick={() => { props.onClose() }}>创建项目</Button>
+              {props.compositionButton}
            </Row>
            <SearchPannel params={params}  setParams={setParams} user={user || []}></SearchPannel>
            <List
                 loading={isLoading}
-                onClose={props.onClose}
+                compositionButton={props.compositionButton}
                 retry={retry}
                 dataSource={ data || [] } users={user || []}
             ></List>

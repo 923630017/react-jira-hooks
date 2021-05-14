@@ -5,7 +5,7 @@ import { useAuth } from './context/auth-context';
 import styled from '@emotion/styled';
 // 将svg作为组件引入
 import { ReactComponent as SoftwareSvg } from 'common/img/software-logo.svg';
-import { Row } from 'components/flexLib';
+import { NoPaddingButton, Row } from 'components/flexLib';
 import { Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 //引入路由
@@ -18,13 +18,25 @@ const AuthenticatedApp:React.FC = () => {
     const onClose = () => { setstate(preState => !preState) }
     return(
         <Container>
-            <ContentHeader onClose={onClose}></ContentHeader>
+            <ContentHeader
+                compositionButton={
+                    <NoPaddingButton
+                        type='link'
+                        onClick={() => { onClose() }}
+                    >创建项目</NoPaddingButton>}>
+            </ContentHeader>
             {/* <Button onClick={onClose}>打开</Button> */}
             <Main>
                 <Router>
                     <Routes>
                         {/* 路由中*指匹配匹配下面所有的路径 */}
-                        <Route path={'/project-list'} element={<ProjectList onClose={onClose}></ProjectList>}></Route>
+                        <Route path={'/project-list'} element={<ProjectList compositionButton={
+                            <NoPaddingButton
+                                type='link'
+                                onClick={() => { onClose() }}
+                            >创建项目</NoPaddingButton>}>
+                            </ProjectList>}>
+                        </Route>
                         <Route path={'/project-list/:id/*'}  element={<ProjectScreen/>}></Route>
                         <Navigate to={'/project-list'}></Navigate>
                     </Routes>
@@ -34,21 +46,21 @@ const AuthenticatedApp:React.FC = () => {
         </Container>
     )
 }
-const ContentHeader = (props: { onClose: () => void }) => {
+const ContentHeader = (props: { compositionButton: JSX.Element, children:React.ReactNode }) => {
     return (
-    <Header between={true}>
-        <HeaderLeft gap={true}>
-            {/* svg */}
-            <Button type='link' style={{padding: 0, display: 'flex', alignItems: 'center'}} onClick={() => { window.location.href = window.location.origin }}>
-                <SoftwareSvg width={'200px'}  color={'deeppink'}></SoftwareSvg>
-            </Button>
-            <ProjectPopover onClose={props.onClose}/>
-            <span>用户</span>
-        </HeaderLeft>
-        <HeaderRight>
-            <User/>
-        </HeaderRight>
-    </Header>)
+        <Header between={true}>
+            <HeaderLeft gap={true}>
+                {/* svg */}
+                <Button type='link' style={{padding: 0, display: 'flex', alignItems: 'center'}} onClick={() => { window.location.href = window.location.origin }}>
+                    <SoftwareSvg width={'200px'}  color={'deeppink'}></SoftwareSvg>
+                </Button>
+                <ProjectPopover {...props}/>
+                <span>用户</span>
+            </HeaderLeft>
+            <HeaderRight>
+                <User/>
+            </HeaderRight>
+        </Header>)
 }
 const User = () => {
     const { logout, user } = useAuth();
