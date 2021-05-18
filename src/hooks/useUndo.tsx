@@ -1,7 +1,7 @@
 // reducer例子
 // useUndo 可以设置变量 设置返回前面设置过的变量和将来变量，还有重置
 
-import { useCallback, useState } from "react"
+import { useCallback, useState, useReducer } from "react"
 
 export const useUndo = <T extends any>(initValue: T) => {
     // 设置变量
@@ -135,6 +135,93 @@ export const useUndo1 = <T extends any>(initValue: T) => {
            futureArr: [], 
         }))
     }, [])
+    return [
+        state,
+        { set, redo, reset, undo, canRedo, canUndo }
+    ]
+}
+
+// useReducer
+const UNDO = 'UNDO';
+const REDO = 'REDO';
+const SET = 'SET';
+const RESET = 'RESET';
+
+type State<T> = {
+    pastArr: T[],
+    currentValue: T,
+    futureArr: T[],
+}
+type Action<T> = {
+    newCurrentValue?: T,
+    type: typeof UNDO | typeof REDO | typeof SET | typeof RESET,
+}
+const undoReducer =<T extends any>(state: State<T>, action: Action<T>) => {
+    const { pastArr, currentValue, futureArr } = state;
+    const { newCurrentValue, type } = action;
+    switch (type) {
+        case UNDO:
+            if(pastArr.length === 0) {
+                return state;
+            }
+            // pastStates: [1,2,34,5, previousState]; 
+            //上一个值
+            const previousState = pastArr[pastArr.length -1];
+            // 其他之前的变量otherPreviousState: [1,2,34,5]; 
+            const otherPreviousState = pastArr.slice(0, pastArr.length-1);
+            return {
+                pastArr: otherPreviousState,
+                currentValue: previousState,
+                futureArr: [previousState, ...futureArr],
+            }
+        case REDO:
+            if(futureArr.length === 0) {
+                return state;
+            }
+            const nextFutureState = futureArr[0];
+            const otherFutureStates = futureArr.slice(1);
+            return {
+                currentValue: nextFutureState,
+                pastArr: [...pastArr, currentValue],
+                futureArr: otherFutureStates,
+            }
+        case SET:
+            if(newCurrentValue === currentValue) {
+                return state;
+            }
+            // 将来值清空
+            return {
+                currentValue: newCurrentValue,
+                pastArr: [...pastArr, currentValue],
+                futureArr: [],
+            }
+        case RESET:
+            return {
+                currentValue: newCurrentValue,
+                pastArr: [],
+                futureArr: [],
+            }
+        default:
+            return state;
+    }
+}
+export const useUndo2 = <T extends any>(initValue: T) => {
+    const [state, dispatch] = useReducer(undoReducer, {
+        pastArr: [],
+        currentValue: initValue,
+        futureArr: [],
+    } as State<T>);
+    // 能否前置或者后置
+    const canUndo = state.pastArr.length === 0; // true则不能 ，反之则能
+    const canRedo = state.futureArr.length === 0;
+    // 设置以前值
+    const undo = useCallback(() => {dispatch({type: UNDO})}, []);
+    // 设置未来值
+    const redo = useCallback(() => { dispatch({type: REDO}) }, []);
+    //设置值
+    const set = useCallback((newState: T) => { dispatch({type: SET, newCurrentValue: newState})}, []);
+    // 重置
+    const reset = useCallback((resetValue:T) => { dispatch({type: RESET, newCurrentValue: resetValue}) }, []);
     return [
         state,
         { set, redo, reset, undo, canRedo, canUndo }
